@@ -219,7 +219,7 @@ export default async function handler(req, res) {
   }
 
   try {
-    function calendarAnswer(text, timezone, now = new Date()) {  if (!/(?:сегодня|today)/i.test(text) ||      !/(?:какая.*дата|какое.*число|какой.*день недели|what.*date|what.*day)/i.test(text)) return "";  let timeZone = typeof timezone === "string" ? timezone : "Europe/Moscow";  try {    new Intl.DateTimeFormat("ru-RU", { timeZone });  } catch {    timeZone = "Europe/Moscow";  }  return `Сегодня ${new Intl.DateTimeFormat("ru-RU", {    day: "numeric", month: "long", year: "numeric", weekday: "long", timeZone  }).format(now)}`;}function safeHistory(history) {
+
     if (isSearchIntent(text) && process.env.SERPER_API_KEY) {
       // Search has a very short budget because Alice expects a response within 4.5 seconds.
       searchContext = await searchWeb(text, Math.min(SERPER_TIMEOUT_MS, Math.max(0, remainingMs() - 2600)));

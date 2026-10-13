@@ -220,7 +220,7 @@ export default async function handler(req, res) {
 
   try {
 
-    if (isSearchIntent(text) && process.env.SERPER_API_KEY) {
+    const dateAnswer = calendarAnswer(text, body?.meta?.timezone); if (dateAnswer) return res.status(200).json(aliceResponse(dateAnswer, false, oldHistory)); let searchContext = ""; if (isSearchIntent(text) && process.env.SERPER_API_KEY) {
       // Search has a very short budget because Alice expects a response within 4.5 seconds.
       searchContext = await searchWeb(text, Math.min(SERPER_TIMEOUT_MS, Math.max(0, remainingMs() - 2600)));
     }

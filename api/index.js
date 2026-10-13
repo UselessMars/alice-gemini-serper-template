@@ -49,7 +49,7 @@ function isSearchIntent(text) {
   return /\b(latest|today|current|news|weather|price|exchange rate|recent|search|look up)\b|сегодня|сейчас|последн|новост|погод|курс валют|найди|поищи|актуальн|сколько стоит|свежие данные/i.test(text);
 }
 
-function safeHistory(history) {
+function calendarAnswer(text, timezone, now = new Date()) {  if (!/(?:сегодня|today)/i.test(text) ||      !/(?:какая.*дата|какое.*число|какой.*день недели|what.*date|what.*day)/i.test(text)) return "";  let timeZone = typeof timezone === "string" ? timezone : "Europe/Moscow";  try {    new Intl.DateTimeFormat("ru-RU", { timeZone });  } catch {    timeZone = "Europe/Moscow";  }  return `Сегодня ${new Intl.DateTimeFormat("ru-RU", {    day: "numeric", month: "long", year: "numeric", weekday: "long", timeZone  }).format(now)}`;}function safeHistory(history) {
   if (!Array.isArray(history)) return [];
   return history
     .filter(item => item && (item.role === "user" || item.role === "model") && typeof item.text === "string")
@@ -219,7 +219,7 @@ export default async function handler(req, res) {
   }
 
   try {
-    let searchContext = "";
+    function calendarAnswer(text, timezone, now = new Date()) {  if (!/(?:сегодня|today)/i.test(text) ||      !/(?:какая.*дата|какое.*число|какой.*день недели|what.*date|what.*day)/i.test(text)) return "";  let timeZone = typeof timezone === "string" ? timezone : "Europe/Moscow";  try {    new Intl.DateTimeFormat("ru-RU", { timeZone });  } catch {    timeZone = "Europe/Moscow";  }  return `Сегодня ${new Intl.DateTimeFormat("ru-RU", {    day: "numeric", month: "long", year: "numeric", weekday: "long", timeZone  }).format(now)}`;}function safeHistory(history) {
     if (isSearchIntent(text) && process.env.SERPER_API_KEY) {
       // Search has a very short budget because Alice expects a response within 4.5 seconds.
       searchContext = await searchWeb(text, Math.min(SERPER_TIMEOUT_MS, Math.max(0, remainingMs() - 2600)));
@@ -246,4 +246,4 @@ export default async function handler(req, res) {
   }
 }
 
-export { aliceResponse, fitAliceText, isSearchIntent, safeHistory };
+const dateAnswer = calendarAnswer(text, body?.meta?.timezone); if (dateAnswer) return res.status(200).json(aliceResponse(dateAnswer, false, oldHistory)); let searchContext = "";

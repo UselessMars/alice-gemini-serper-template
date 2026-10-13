@@ -246,4 +246,4 @@ export default async function handler(req, res) {
   }
 }
 
-const dateAnswer = calendarAnswer(text, body?.meta?.timezone); if (dateAnswer) return res.status(200).json(aliceResponse(dateAnswer, false, oldHistory)); let searchContext = "";
+export { aliceResponse, calendarAnswer, fitAliceText, isSearchIntent, safeHistory };
